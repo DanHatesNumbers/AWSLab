@@ -118,6 +118,10 @@ resource "aws_instance" "salt_master" {
             "doas pkg_add git"
         ]
     }
+
+    provisioner "remote-exec" {
+        script = "conf/salt_master/bootstrap.shS"
+    }
 }
 
 data "aws_route53_zone" "selected" {
