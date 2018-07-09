@@ -110,6 +110,7 @@ resource "aws_instance" "salt_master" {
         inline = [
             "doas pkg_add salt",
             "doas mv /tmp/master.conf /etc/salt/master",
+            "doas mkdir -p /var/salt/{base,pillar}",
             "doas rcctl enable salt_master",
             "doas rcctl start salt_master",
             "doas pkg_add py-pip libgit2",
@@ -128,4 +129,43 @@ resource "aws_route53_record" "salt" {
     type = "A"
     ttl = "300"
     records = ["${aws_instance.salt_master.public_ip}"]
+}
+
+resource "aws_route53_record" "test" {
+    zone_id = "${data.aws_route53_zone.selected.zone_id}"
+    name = "test.${data.aws_route53_zone.selected.name}"
+    type = "A"
+    ttl = "300"
+    records = ["${aws_instance.web.public_ip}"]
+}
+
+resource "aws_instance" "web" {
+    connection {
+        user = "ec2-user"
+        private_key = "${file(var.private_key_path)}"
+    }
+
+    instance_type = "t2.micro"
+
+
+    ami = "${lookup(var.aws_amis, var.aws_region)}"
+    key_name = "${var.key_name}"
+    vpc_security_group_ids = ["${aws_security_group.ssh.id}", "${aws_security_group.web.id}", "${aws_security_group.outbound_internet.id}"]
+
+    subnet_id = "${aws_subnet.default.id}"
+    associate_public_ip_address = true
+
+    provisioner "file" {
+        source = "conf/web/minion.conf"
+        destination = "/tmp/minion.conf"
+    }
+
+    provisioner "remote-exec" {
+        inline = [
+            "doas pkg_add salt",
+            "doas mv /tmp/minion.conf /etc/salt/minion",
+            "doas rcctl enable salt_minion",
+            "doas rcctl start salt_minion",
+        ]
+    }
 }
