@@ -114,7 +114,8 @@ resource "aws_instance" "salt_master" {
             "doas rcctl enable salt_master",
             "doas rcctl start salt_master",
             "doas pkg_add py-pip libgit2",
-            "doas pip2.7 install 'pygit2>=0.26,<0.27'"
+            "doas pip2.7 install 'pygit2>=0.26,<0.27'",
+            "doas pkg_add git"
         ]
     }
 }
