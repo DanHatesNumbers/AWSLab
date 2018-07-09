@@ -117,3 +117,15 @@ resource "aws_instance" "salt_master" {
         ]
     }
 }
+
+data "aws_route53_zone" "selected" {
+    name = "danhatesnumbers.co.uk."
+}
+
+resource "aws_route53_record" "salt" {
+    zone_id = "${data.aws_route53_zone.selected.zone_id}"
+    name = "salt.${data.aws_route53_zone.selected.name}"
+    type = "A"
+    ttl = "300"
+    records = ["${aws_instance.salt_master.public_ip}"]
+}
