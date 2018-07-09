@@ -120,7 +120,7 @@ resource "aws_instance" "salt_master" {
     }
 
     provisioner "remote-exec" {
-        script = "conf/salt_master/bootstrap.shS"
+        script = "conf/salt_master/bootstrap.sh"
     }
 }
 
