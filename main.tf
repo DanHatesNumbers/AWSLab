@@ -139,6 +139,14 @@ resource "aws_route53_record" "test" {
     records = ["${aws_instance.web.public_ip}"]
 }
 
+data "template_file" "web_minion_conf" {
+    template = "master: $${master_private_ip}"
+
+    vars {
+        master_private_ip = "${aws_instance.salt_master.private_ip}"
+    }
+}
+
 resource "aws_instance" "web" {
     connection {
         user = "ec2-user"
@@ -156,7 +164,7 @@ resource "aws_instance" "web" {
     associate_public_ip_address = true
 
     provisioner "file" {
-        source = "conf/web/minion.conf"
+        content = "${data.template_file.web_minion_conf.rendered}"
         destination = "/tmp/minion.conf"
     }
 
