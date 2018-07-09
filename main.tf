@@ -101,11 +101,19 @@ resource "aws_instance" "salt_master" {
     subnet_id = "${aws_subnet.default.id}"
     associate_public_ip_address = true
 
+    provisioner "file" {
+        source = "conf/salt_master/master.conf"
+        destination = "/tmp/master.conf"
+    }
+
     provisioner "remote-exec" {
         inline = [
             "doas pkg_add salt",
+            "doas mv /tmp/master.conf /etc/salt/master",
             "doas rcctl enable salt_master",
-            "doas rcctl start salt_master"
+            "doas rcctl start salt_master",
+            "doas pkg_add py-pip libgit2",
+            "doas pip2.7 install 'pygit2>=0.26,<0.27'"
         ]
     }
 }
