@@ -1,8 +1,10 @@
-include:
-  - letsencrypt
+letsencrypt:
+  pkg.installed
 
-setup_letsencrypt:
+/etc/letsencrypt/cli.ini:
   file.managed:
-    - require: letsencrypt.install
-    - name: "/etc/letsencrypt/cli.ini"
+    - require:
+      - pkg: letsencrypt
     - source: salt://letsencrypt.conf
+    - user: root
+    - group: wheel
