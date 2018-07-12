@@ -14,9 +14,9 @@ variable "aws_region" {
     default = "eu-west-1"
 }
 
-# My OpenBSD 6.3 AMI
+# Public FreeBSD 11.2 AMI
 variable "aws_amis" {
     default = {
-        eu-west-1 = "ami-ee939d04"
+        eu-west-1 = "ami-ab050d41"
     }
 }
