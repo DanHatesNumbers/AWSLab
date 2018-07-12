@@ -1,10 +1,15 @@
-letsencrypt:
+py27-certbot:
   pkg.installed
 
-/etc/letsencrypt/cli.ini:
+py27-certbot-dns-route53:
+  pkg.installed
+
+/usr/local/etc/letsencrypt/cli.ini:
   file.managed:
-    - require:
-      - pkg: letsencrypt
+    - require: 
+        - pkg: py27-certbot
+        - pkg: py27-certbot-dns-route53
+    - makedirs: True
     - source: salt://letsencrypt.conf
     - user: root
     - group: wheel
