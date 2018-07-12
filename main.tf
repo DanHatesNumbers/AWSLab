@@ -108,14 +108,13 @@ resource "aws_instance" "salt_master" {
 
     provisioner "remote-exec" {
         inline = [
-            "doas pkg_add salt",
-            "doas mv /tmp/master.conf /etc/salt/master",
-            "doas mkdir -p /var/salt/{base,pillar}",
-            "doas rcctl enable salt_master",
-            "doas rcctl start salt_master",
-            "doas pkg_add py-pip libgit2",
-            "doas pip2.7 install 'pygit2>=0.26,<0.27'",
-            "doas pkg_add git"
+            "sudo pkg install py27-salt",
+            "sudo mv /tmp/master.conf /usr/local/etc/salt/master",
+            "sudo mkdir -p /var/salt/base",
+            "sudo mkdir -p /var/salt/pillar",
+            "sudo sysrc salt_master_enable=\"YES\"",
+            "sudo service salt_master start",
+            "sudo pkg install git"
         ]
     }
 
@@ -175,10 +174,11 @@ resource "aws_instance" "web" {
 
     provisioner "remote-exec" {
         inline = [
-            "doas pkg_add salt",
-            "doas mv /tmp/minion.conf /etc/salt/minion",
-            "doas rcctl enable salt_minion",
-            "doas rcctl start salt_minion",
+            "sudo pkg install py27-salt",
+            "sudo mv /tmp/minion.conf /etc/salt/minion",
+            "sudo sysrc salt_minion_enable=\"YES\"",
+		    "sudo service salt_minion start"
+
         ]
     }
 }
