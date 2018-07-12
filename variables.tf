@@ -1,9 +1,9 @@
 variable "public_key_path" {
-    default = "C:\\Users\\Dan\\AWSLab\\AWSLab_openssh.pub"
+    default = "..\\AWSLab_openssh.pub"
 }
 
 variable "private_key_path" {
-    default = "C:\\Users\\Dan\\AWSLab\\AWSLab.priv"
+    default = "..\\AWSLab.priv"
 }
 
 variable "key_name" {
