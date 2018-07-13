@@ -193,7 +193,6 @@ resource "aws_instance" "web" {
     provisioner "remote-exec" {
         inline = [
             "su -l root -c 'pkg install -y sudo'",
-            "su -l root -c 'mv /tmp/sudoers /usr/local/etc/sudoers'",
             "su -l root -c 'mv /tmp/sudoers /usr/local/etc/sudoers && chown root:wheel /usr/local/etc/sudoers'",
             "sudo pkg install -y py27-salt",
             "sudo mv /tmp/minion.conf /etc/salt/minion",
