@@ -20,3 +20,8 @@ variable "aws_amis" {
         eu-west-1 = "ami-ab050d41"
     }
 }
+
+# Hosted Zone ID for danhatesnumbers.co.uk
+variable "hosted_zone_id" {
+    default = "Z2UKL234V4EU7O"
+}
