@@ -22,7 +22,7 @@ register:
 
 provision:
   cmd.run:
-    - name: "certbot certonly --dns-route53 --domains test.danhatesnumbers@gmail.com"
+    - name: "certbot certonly --dns-route53 --domains test.danhatesnumbers.co.uk"
     - runas: root
     - creates: /usr/local/etc/letsencrypt/live/test.danhatesnumbers.co.uk/fullchain.pem
 
