@@ -1,4 +1,5 @@
-if [ ! -d "AWSLab" ]; then
+if [ ! -d "AWSLab" ]
+then
     git clone https://github.com/DanHatesNumbers/AWSLab
 else
     cd AWSLab && git pull && cd ..
