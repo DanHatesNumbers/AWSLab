@@ -161,6 +161,56 @@ data "template_file" "web_minion_conf" {
     }
 }
 
+resource "aws_iam_role" "web_iam_role" {
+    name = "web_iam_role"
+    assume_role_policy = "${data.aws_iam_policy_document.web_iam_assume_role_policy_document.json}"
+}
+
+data "aws_iam_policy_document" "web_iam_assume_role_policy_document" {
+    statement {
+        actions = ["sts:AssumeRole"]
+
+        principals {
+            type = "Service"
+            identifiers = ["ec2.amazonaws.com"]
+        }
+
+        effect = "Allow"
+    }
+}
+
+resource "aws_iam_role_policy" "web_iam_role_policy" {
+    name = "web_iam_role_policy"
+    role = "${aws_iam_role.web_iam_role.id}"
+    policy = "${data.aws_iam_policy_document.web_iam_role_policy_document.json}"
+}
+
+data "aws_iam_policy_document" "web_iam_role_policy_document" {
+    statement {
+        actions = [
+            "route53:ListHostedZones",
+            "route53:GetChange"
+        ]
+
+        resources = ["*"]
+
+        effect = "Allow"
+    }
+
+    statement {
+        actions = ["route53:ChangeResourceRecordSets"]
+
+        resources = ["arn:aws:route53:::hostedzone/${var.hosted_zone_id}"]
+
+        effect = "Allow"
+    }
+}
+
+resource "aws_iam_instance_profile" "web_instance_profile" {
+    name = "web_instance_profile"
+    role = "web_iam_role"
+}
+
 resource "aws_instance" "web" {
     connection {
         user = "ec2-user"
@@ -173,6 +223,8 @@ resource "aws_instance" "web" {
     ami = "${lookup(var.aws_amis, var.aws_region)}"
     key_name = "${var.key_name}"
     vpc_security_group_ids = ["${aws_security_group.ssh.id}", "${aws_security_group.web.id}", "${aws_security_group.outbound_internet.id}"]
+
+    iam_instance_profile = "${aws_iam_instance_profile.web_instance_profile.id}"
 
     subnet_id = "${aws_subnet.default.id}"
     associate_public_ip_address = true
@@ -198,7 +250,6 @@ resource "aws_instance" "web" {
             "sudo mv /tmp/minion.conf /usr/local/etc/salt/minion",
             "sudo sysrc salt_minion_enable=\"YES\"",
 		    "sudo service salt_minion start"
-
         ]
     }
 }
