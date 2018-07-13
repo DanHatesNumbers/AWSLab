@@ -108,7 +108,7 @@ resource "aws_instance" "salt_master" {
 
     provisioner "remote-exec" {
         inline = [
-            "su -l root -c 'pkg install sudo'",
+            "su -l root -c 'pkg install -y sudo'",
             "sudo pkg install py27-salt",
             "sudo mv /tmp/master.conf /usr/local/etc/salt/master",
             "sudo mkdir -p /var/salt/base",
@@ -175,7 +175,7 @@ resource "aws_instance" "web" {
 
     provisioner "remote-exec" {
         inline = [
-            "su -l root -c 'pkg install sudo'",
+            "su -l root -c 'pkg install -y sudo'",
             "sudo pkg install py27-salt",
             "sudo mv /tmp/minion.conf /etc/salt/minion",
             "sudo sysrc salt_minion_enable=\"YES\"",
