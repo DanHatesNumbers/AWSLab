@@ -106,16 +106,25 @@ resource "aws_instance" "salt_master" {
         destination = "/tmp/master.conf"
     }
 
+    provisioner "file" {
+        content = <<EOF
+        root ALL=(ALL) ALL
+        ec2-user ALL=(ALL) NOPASSWD: ALL
+        EOF
+        destination = "/tmp/sudoers"
+    }
+
     provisioner "remote-exec" {
         inline = [
             "su -l root -c 'pkg install -y sudo'",
-            "sudo pkg install py27-salt",
+            "su -l root -c 'mv /tmp/sudoers /usr/local/etc/sudoers && chown root:wheel /usr/local/etc/sudoers'",
+            "sudo pkg install -y py27-salt",
             "sudo mv /tmp/master.conf /usr/local/etc/salt/master",
             "sudo mkdir -p /var/salt/base",
             "sudo mkdir -p /var/salt/pillar",
             "sudo sysrc salt_master_enable=\"YES\"",
             "sudo service salt_master start",
-            "sudo pkg install git"
+            "sudo pkg install -y git"
         ]
     }
 
@@ -173,10 +182,20 @@ resource "aws_instance" "web" {
         destination = "/tmp/minion.conf"
     }
 
+    provisioner "file" {
+        content = <<EOF
+        root ALL=(ALL) ALL
+        ec2-user ALL=(ALL) NOPASSWD: ALL
+        EOF
+        destination = "/tmp/sudoers"
+    }
+
     provisioner "remote-exec" {
         inline = [
             "su -l root -c 'pkg install -y sudo'",
-            "sudo pkg install py27-salt",
+            "su -l root -c 'mv /tmp/sudoers /usr/local/etc/sudoers'",
+            "su -l root -c 'mv /tmp/sudoers /usr/local/etc/sudoers && chown root:wheel /usr/local/etc/sudoers'",
+            "sudo pkg install -y py27-salt",
             "sudo mv /tmp/minion.conf /etc/salt/minion",
             "sudo sysrc salt_minion_enable=\"YES\"",
 		    "sudo service salt_minion start"
