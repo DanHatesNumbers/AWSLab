@@ -19,3 +19,14 @@ register:
     - name: "certbot register --no-eff-email"
     - runas: root
     - creates: /usr/local/etc/letsencrypt/accounts
+
+provision:
+  cmd.run:
+    - name: "certbot certonly --dns-route53 --domains test.danhatesnumbers@gmail.com"
+    - runas: root
+    - creates: /usr/local/etc/letsencrypt/live/test.danhatesnumbers.co.uk/fullchain.pem
+
+renew:
+  cmd.run:
+    - name: "certbot renew"
+    - runas: root
