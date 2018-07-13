@@ -1,6 +1,6 @@
 nginx:
   pkg.installed
-  service.running
+  service.running:
     - watch_any:
       - file: /usr/local/etc/nginx/nginx.conf
       - file: /usr/local/etc/nginx/conf.d/test.danhatesnumbers.co.uk.conf
