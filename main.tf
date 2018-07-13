@@ -195,7 +195,7 @@ resource "aws_instance" "web" {
             "su -l root -c 'pkg install -y sudo'",
             "su -l root -c 'mv /tmp/sudoers /usr/local/etc/sudoers && chown root:wheel /usr/local/etc/sudoers'",
             "sudo pkg install -y py27-salt",
-            "sudo mv /tmp/minion.conf /etc/salt/minion",
+            "sudo mv /tmp/minion.conf /usr/local/etc/salt/minion",
             "sudo sysrc salt_minion_enable=\"YES\"",
 		    "sudo service salt_minion start"
 
