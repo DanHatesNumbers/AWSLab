@@ -11,7 +11,7 @@ www/nginx-lite:
     - options:
       - HTTPV2: on
     - require:
-      - pkg: openssl-devel
+      - security/openssl-devel
 
 dhparam:
   cmd.run:
