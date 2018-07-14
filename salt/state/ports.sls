@@ -1,6 +1,6 @@
 fetch-ports:
   cmd.run:
-    - name: portsnap fetch
+    - name: portsnap fetch --interactive
 
 extract-ports:
   cmd.run:
