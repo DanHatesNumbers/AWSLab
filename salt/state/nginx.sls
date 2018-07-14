@@ -34,7 +34,6 @@ nginx-service:
   file.managed:
     - require: 
       - pkg: nginx
-      - file: /usr/local/etc/nginx/dhparam.pem
     - source: salt://nginx.conf
     - user: root
     - group: wheel
