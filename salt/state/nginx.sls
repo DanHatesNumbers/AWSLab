@@ -6,7 +6,7 @@ openssl:
 
 dhparam:
   cmd.run:
-    - name: "openssl dhparam -out /usr/local/etc/nginx/dhparam.pem 4096"
+    - name: "openssl dhparam -out /usr/local/etc/nginx/dhparam.pem 2048"
     - require:
       - pkg: openssl
     - runas: root
