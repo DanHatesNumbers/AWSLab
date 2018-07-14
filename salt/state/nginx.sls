@@ -46,3 +46,6 @@ nginx-service:
     - makedirs: True
     - user: root
     - group: wheel
+
+/usr/local/etc/nginx/nginx.conf-dist:
+  file.absent
