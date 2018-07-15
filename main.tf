@@ -116,8 +116,10 @@ resource "aws_instance" "salt_master" {
 
     provisioner "remote-exec" {
         inline = [
+            "su -l root -c 'echo hostname=\"salt.danhatesnumbers.co.uk\" >> /etc/rc.conf'",
             "su -l root -c 'pkg install -y sudo'",
             "su -l root -c 'mv /tmp/sudoers /usr/local/etc/sudoers && chown root:wheel /usr/local/etc/sudoers'",
+            "sudo hostname salt.danhatesnumbers.co.uk",
             "sudo pkg install -y py27-salt",
             "sudo mv /tmp/master.conf /usr/local/etc/salt/master",
             "sudo mkdir -p /var/salt/base",
@@ -244,8 +246,10 @@ resource "aws_instance" "web" {
 
     provisioner "remote-exec" {
         inline = [
+            "su -l root -c 'echo hostname=\"test.danhatesnumbers.co.uk\" >> /etc/rc.conf'",
             "su -l root -c 'pkg install -y sudo'",
             "su -l root -c 'mv /tmp/sudoers /usr/local/etc/sudoers && chown root:wheel /usr/local/etc/sudoers'",
+            "sudo hostname test.danhatesnumbers.co.uk",
             "sudo pkg install -y py27-salt",
             "sudo mv /tmp/minion.conf /usr/local/etc/salt/minion",
             "sudo sysrc salt_minion_enable=\"YES\"",
